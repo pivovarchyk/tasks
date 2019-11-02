@@ -1,0 +1,23 @@
+body{
+    padding:50px 0px 0px 0px;
+    z-index:0;
+}
+.navbar-dark {
+     background-color: #512DA8;
+}
+/*-----------------------------------*/
+.displayNone {
+  display: none;
+}
+.title-message {
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  align-self: center;
+}
+.arrows-title-message {
+  flex-direction: column;
+  margin-left: 4px;
+  margin-right: 8px;
+}

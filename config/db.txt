@@ -1,0 +1,25 @@
+CREATE DATABASE tasks DEFAULT CHARACTER SET utf8;
+
+USE tasks;
+
+CREATE TABLE users(
+  user_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(128),
+  email VARCHAR(128),
+  role VARCHAR(5),
+  password VARCHAR(32),
+  PRIMARY KEY(user_id),
+  INDEX(email)
+)ENGINE=InnoDB CHARSET=utf8;
+
+CREATE TABLE tasks(
+  task_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  text TEXT,
+  id_user INTEGER UNSIGNED NOT NULL,
+  PRIMARY KEY(task_id),
+  FOREIGN KEY (id_user) REFERENCES users(user_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+)ENGINE=InnoDB CHARSET=utf8;
+
+INSERT INTO users (name, email, role, password) VALUES ('admin', 'admin@email.com', 'admin' , '123');

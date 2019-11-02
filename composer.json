@@ -1,0 +1,27 @@
+{
+    "name": "op/tasks",
+    "description": "The book of problems",
+    "keywords": ["tasks", "book"],
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Olga Pivovarchyk",
+            "email": "pivovarchyk@gmail.com"
+        }
+    ],
+    "require": {
+        "ext-pdo": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr4": {
+            "OP\\Tasks\\": "src/",
+            "OP\\Tasks\\Config\\":"config/"
+        },
+        "classmap": [
+            "src/",
+            "config/"
+        ]
+    }
+}
