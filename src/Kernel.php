@@ -11,9 +11,15 @@ class Kernel
 {
     public function handle(Request $request) : Response
     {
+
         $init = new IndexController();
-        $content = $init->show($request);
-        $response = new Response ($content['content'], $content['params']);
+        if ($request->getPost()['edittask']) {
+            $content = $init->ajaxRequest($request);
+            $response = new Response();
+        } else {
+            $content = $init->show($request);
+            $response = new Response ($content['content'], $content['params']);
+        }
         return $response;
     }
 }

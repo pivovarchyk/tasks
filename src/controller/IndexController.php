@@ -31,15 +31,10 @@ class IndexController
         if ($request->getPost()['savetask']) {
             $tasks->AddItem($request->getPost());
         }
-        if ($request->getPost()['edittask']) {
-            var_dump($request->getPost());
-            $tasks->editItem($request->getPost());
-        }
         //to former array content with tasks
         $sort = isset($request->getPost()['sort']) ? $request->getPost()['sort'] : 'name_desc';
         $blocksOfTasks = [];
         $blocksOfTasks = $tasks->getAllItems3($sort);
-
         if (isset($request->getSession()['admin'])) {
             $user = ['admin'=>$request->getSession()['admin']];
         } else {
@@ -55,5 +50,12 @@ class IndexController
                 ],
             'content' => 'userview.php'
         ];
+    }
+
+    public function ajaxRequest(Request $request)
+    {
+        $tasks = new Task();
+        $tasks->editItem($request->getPost());
+        return ;
     }
 }

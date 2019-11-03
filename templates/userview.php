@@ -138,13 +138,13 @@
                                           <div class="title-message">
                                               Имя пользователя
                                               <div class="arrows-title-message">
-                                                  <form method="post">
+                                                  <form method="post" action="#tasksTable">
                                                       <div>
                                                           <input type="hidden" name="sort" value="name_desc">
                                                           <input type="image" src="<?=$sort == "name_desc" ? "images/double-up.png": "images/double-up-not.png" ?>" name = "sort" value="name_desc" width="10" height="10"/>
                                                       </div>
                                                   </form>
-                                                  <form method="post">
+                                                  <form method="post" action="#tasksTable">
                                                       <div>
                                                           <input type="hidden" name="sort" value="name_asc">
                                                           <input type="image" src="<?=$sort == "name_asc" ? "images/double-down.png":"images/double-down-not.png" ?>" name = "sort" value="name_asc" width="10" height="10" />
@@ -157,18 +157,19 @@
                                         <div class="title-message">
                                               Электронная почта
                                               <div class="arrows-title-message">
-                                                  <form method="post"><input type="hidden" name="sort" value="email_desc"/><div><input type="image" src=<?=$sort == "email_desc" ? "images/double-up.png": "images/double-up-not.png" ?>  name = "sort" value="email_desc" width="10" height="10"/></div></form>
-                                                  <form method="post"><input type="hidden" name="sort" value="email_asc"/><div><input type="image" src=<?=$sort == "email_asc" ? "images/double-down.png":"images/double-down-not.png" ?> name = "sort" value="email_asc" width="10" height="10" /></div></form>
+                                                  <form method="post" action="#tasksTable"><input type="hidden" name="sort" value="email_desc"/><div><input type="image" src=<?=$sort == "email_desc" ? "images/double-up.png": "images/double-up-not.png" ?>  name = "sort" value="email_desc" width="10" height="10"/></div></form>
+                                                  <form method="post" action="#tasksTable"><input type="hidden" name="sort" value="email_asc"/><div><input type="image" src=<?=$sort == "email_asc" ? "images/double-down.png":"images/double-down-not.png" ?> name = "sort" value="email_asc" width="10" height="10" /></div></form>
                                               </div>
                                         </div>
                                     </th>
                                     <th style="vertical-align:top">Текст задачи</th>
+                                    <th style="vertical-align:top">Корректировка</th>
                                     <th>
                                         <div class="title-message">
                                             Отметка о выполнении
                                             <div class="arrows-title-message">
-                                                <form method="post"><input type="hidden" name="sort" value="done_desc"/><div><input type="image" src=<?=$sort == "done_desc" ? "images/double-up.png": "images/double-up-not.png" ?>  name = "sort" value="done_desc" width="10" height="10"/></div></form>
-                                                <form method="post"><input type="hidden" name="sort" value="done_asc"/><div><input type="image" src=<?=$sort == "done_asc" ? "images/double-down.png":"images/double-down-not.png" ?> name = "sort" value="done_asc" width="10" height="10" /></div></form>
+                                                <form method="post" action="#tasksTable"><input type="hidden" name="sort" value="done_desc"/><div><input type="image" src=<?=$sort == "done_desc" ? "images/double-up.png": "images/double-up-not.png" ?>  name = "sort" value="done_desc" width="10" height="10"/></div></form>
+                                                <form method="post" action="#tasksTable"><input type="hidden" name="sort" value="done_asc"/><div><input type="image" src=<?=$sort == "done_asc" ? "images/double-down.png":"images/double-down-not.png" ?> name = "sort" value="done_asc" width="10" height="10" /></div></form>
                                             </div>
                                         </div>
                                     </th>
@@ -187,8 +188,13 @@
                                           <?= htmlentities($task['text']) ?>
                                         </td>
                                         <td>
+                                          <?php if ($task['changeAdmin']):?>
+                                              <span class="badge badge-danger">Изменено администратором</span>
+                                          <?php endif; ?>
+                                        </td>
+                                        <td>
                                             <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" name="done" id="done" <?= htmlentities($task['check']) ?> <?= isset($user['admin']) ? "":"disabled" ?> >
+                                                <input type="checkbox" class="form-check-input" name="done" id="done<?= $i; ?>" <?= htmlentities($task['done']) ? 'checked' : '' ?> <?= isset($user['admin']) ? "":"disabled" ?> >
                                             </div>
                                         </td>
                                      </tr>
@@ -199,18 +205,18 @@
                             </tbody>
                         </table>
                         <nav aria-label="Таблица задач">
-                            <?php $activeCount = 1; $active = 'active' ?>
+                            <?php $active = 'active' ?>
                             <ul class="pagination justify-content-center">
-                                <li class="page-item <?= $count === 1 ? 'disabled' : '' ?> " id="pagination-prev">
-                                    <a href="#tasksTable" class="page-link" onClick="viewMessages(<?= count($blocksOfTasks) ?>, <?=$activeCount-1?>)"> Предыдущая </a>
+                                <li class="page-item disabled" id="pagination-prev">
+                                    <a href="#tasksTable" class="page-link" onClick="viewMessages(<?= count($blocksOfTasks) ?>, <?= -1 ?>)"> Предыдущая </a>
                                 </li>
                                 <?php for($count = 1; $count<=count($blocksOfTasks); $count++): ?>
-                                    <li class="page-item <?= $active ?>" id="pagination<?= $count ?>" ><a href="#tasksTable" class="page-link" onClick="viewMessages(<?=count($blocksOfTasks)?>, <?=$count?>)">
+                                    <li class="page-item <?= $active ?>" id="pagination<?= $count ?>" ><a href="#tasksTable" class="page-link" onClick="viewMessages(<?=count($blocksOfTasks)?>, <?= $count ?>)">
                                         <?= $count ?>
                                     </a></li>
                                     <?php $active = '' ?>
                                 <?php endfor; ?>
-                                <li class="page-item" id="pagination-follow"><a href="#tasksTable" class="page-link" onClick="viewMessages(<?=count($blocksOfTasks)?>, <?=$activeCount+1?>)"> Следующая </a></li>
+                                <li class="page-item" id="pagination-follow"><a href="#tasksTable" class="page-link" onClick="viewMessages(<?=count($blocksOfTasks)?>, <?= -2 ?>)"> Следующая </a></li>
                             </ul>
                        </nav>
                      </div>

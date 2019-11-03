@@ -12,18 +12,35 @@ $(document).ready(() => {
 
   $('table td').keyup(function() {
       clearTimeout($.data(this, 'timer'));
-      dataString = 'text=' + $(this)[0]['innerText'];
-      dataString += '&id=' + $(this)[0]['parentNode']['cells'][0]['innerText'];
-      dataString += '&edittask=yes';
+      dataString = {
+          "name":"text",
+          "value": $(this)[0]['innerText'],
+          "nameCondition":"task_id",
+          "valueCondition": $(this)[0]['parentNode']['cells'][0]['innerText'],
+          "edittask":"yes"
+      };
       var wait = setTimeout(saveData(dataString), 500);
       $(this).data('timer', wait);
   });
 
+  $("input[type='checkbox']").change(function() {
+      $value = $(this)[0]['checked'] ? 1 : 0;
+      dataString = {
+          "name":"done",
+          "value": $value,
+          "nameCondition":"task_id",
+          "valueCondition": $(this)[0]['parentNode']['parentNode']['parentNode']['cells'][0]['innerText'],
+          "edittask":"yes"
+      };
+      saveData(dataString);
+  });
+  /*
   $('tr').dblclick(function(){
       console.log($(this));
       $('#tableTr').modal('show');
       console.log('1');
   });
+  */
 
 });
 
@@ -33,7 +50,7 @@ function saveData (dataString) {
           data:dataString,
           url:'index',
           success:function(data) {
-              alert(dataString)
+              console.log(data);
           }
   });
 }
@@ -45,23 +62,19 @@ function saveData (dataString) {
 function viewMessages(rank, activeCount)
 {
 
-    for (let i=1; i<=rank; i++) {
-        for (let j=1; j<=3; j++) {
-            if (i !== activeCount) {
-                document.getElementById('visability'+(j+(i*3-3))).className = 'displayNone';
-                document.getElementById('visability'+(j+(i*3-3))).className = 'displayNone';
-                document.getElementById('visability'+(j+(i*3-3))).className = 'displayNone';
-                document.getElementById('pagination'+i).className = 'page-item';
-            } else {
-                document.getElementById('visability'+(j+(i*3-3))).className = '';
-                document.getElementById('visability'+(j+(i*3-3))).className = '';
-                document.getElementById('visability'+(j+(i*3-3))).className = '';
-                document.getElementById('pagination'+i).className = 'page-item active';
-            }
+    if (activeCount === -1) {
+        let chapter = document.querySelector('.active');
+        activeCount = parseInt(chapter.id.substring(10));
+        if (activeCount > 1) {
+            activeCount = activeCount-1;
         }
     }
+    if (activeCount === -2) {
+        let chapter = document.querySelector('.active');
+        activeCount = parseInt(chapter.id.substring(10))+1;
+    }
 
-    if (activeCount === 1) {
+    if (activeCount === 1 || activeCount === 0) {
         document.getElementById('pagination-prev').className = 'page-item disabled';
     } else {
         document.getElementById('pagination-prev').className = 'page-item';
@@ -80,4 +93,21 @@ function viewMessages(rank, activeCount)
     } else {
        document.getElementById('pagination-follow').className = 'page-item';
     }
+
+    for (let i=1; i<=rank; i++) {
+        for (let j=1; j<=3; j++) {
+            if (i !== activeCount) {
+                document.getElementById('visability'+(j+(i*3-3))).className = 'displayNone';
+                document.getElementById('visability'+(j+(i*3-3))).className = 'displayNone';
+                document.getElementById('visability'+(j+(i*3-3))).className = 'displayNone';
+                document.getElementById('pagination'+i).className = 'page-item';
+            } else {
+                document.getElementById('visability'+(j+(i*3-3))).className = '';
+                document.getElementById('visability'+(j+(i*3-3))).className = '';
+                document.getElementById('visability'+(j+(i*3-3))).className = '';
+                document.getElementById('pagination'+i).className = 'page-item active';
+            }
+        }
+    }
+
 }

@@ -78,4 +78,20 @@ class Task extends ADBTable
         ]);
         return $this->db->lastInsertId() ? 'сообщение добавлено' : 'сообщение не добавлено';
     }
+
+    public function editItem($params)
+    {
+        extract($params);
+        $sql = "UPDATE tasks.tasks SET ".$name." = :value ";
+        if (strcmp($name,'text') === 0) {
+          $sql .= ", changeAdmin = 1 ";
+        }
+        $sql .= "WHERE ".$nameCondition." = :valueCondition ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':value' => $value,
+            ':valueCondition' => $valueCondition
+        ]);
+        return ;
+    }
 }
